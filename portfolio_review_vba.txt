@@ -1,0 +1,76 @@
+Sub RunAll()
+‘Calls macros in appropriate order to update analysis with newest data
+    Call SaveCalculation
+    Call SuppressErrors
+    Call ManualCalculation
+    Call UpdateAggregate
+    Call UpdatePivots
+    Call AutomaticCalculation
+    Call EnableErrors
+    Call SaveCalculation
+    Call UpdatePortfolioReview
+    Call UpdatePortfolioReview_Small
+    Call EnableErrors
+    Call SaveCalculation
+End Sub
+
+Sub SaveCalculation()
+    Workbooks("Loss Analysis Calculation.xlsm").Activate
+    ActiveWorkbook.Save
+End Sub
+
+Sub SuppressErrors()
+‘Suppresses alerts associated with file updates
+    Application.DisplayAlerts = False
+End Sub
+
+Sub EnableErrors()
+‘Enables alerts
+    Application.DisplayAlerts = True
+End Sub
+
+Sub ManualCalculation()
+‘Avoids calculations until data is completely moved between files
+    Application.Calculation = xlManual
+End Sub
+
+Sub AutomaticCalculation()
+    Application.Calculation = xlAutomatic
+End Sub
+
+Sub UpdateAggregate()
+‘Updates file that holds tidied data
+    ChDir "C:\Users\stephen.bowie.CAROUTLET\Desktop\Loss Analysis"
+    Workbooks.Open Filename:= _
+        "C:\Users\stephen.bowie.CAROUTLET\Desktop\Loss Analysis\Loss Analysis_Aggregate.xlsx"
+    Workbooks("Loss Analysis Calculation").Worksheets("CustomerData_Sales").Activate
+    ActiveSheet.ListObjects("CustomerData").DataBodyRange.Copy
+    Workbooks("Loss Analysis_Aggregate.xlsx").Sheets("CustomerData_Sales").Activate
+    Range("A2").Select
+    Selection.PasteSpecial xlPasteValues
+    Worksheets("Aggregate").Calculate
+    Worksheets("Aggregate_ChrgOff").Calculate
+    Worksheets("Secured").Calculate
+    ActiveWorkbook.Save
+End Sub
+
+Sub UpdatePivots()
+‘Updates summary and analysis data
+    Workbooks.Open ("C:\Users\stephen.bowie\Desktop\Loss Analysis\Loss Analysis_Pivots.xlsx")
+    ActiveWorkbook.RefreshAll
+    ActiveWorkbook.Save
+End Sub
+
+Sub UpdatePortfolioReview()
+' Updates the file shared in monthly meeting
+    Workbooks.Open ("Z:\PMO\Stephen Bowie\Projects\Portfolio Review\Portfolio Risk Review Monthly Report\Portfolio Risk Review.xlsx")
+    ActiveWorkbook.RefreshAll
+    ActiveWorkbook.Close
+End Sub
+
+Sub UpdatePortfolioReview_Small()
+' Updates the file shared broadly within the organization
+    Workbooks.Open ("Z:\PMO\Stephen Bowie\Projects\Portfolio Review\Portfolio Risk Review Monthly Report\Portfolio Risk Review_Small File.xlsx")
+    ActiveWorkbook.RefreshAll
+    ActiveWorkbook.Close
+End Sub

@@ -1,0 +1,47 @@
+Sub RunAll()
+    Call AddToList
+    Call Replace0withBlank
+    Call SavePDF
+    Call Clear_Form
+End Sub
+
+Sub AddToList()
+' Copies new data into table
+
+    Application.ScreenUpdating = False
+    Dim copySheet As Worksheet
+    Dim pasteSheet As Worksheet
+    
+    Set copySheet = Worksheets("Line")
+    Set pasteSheet = Worksheets("List")
+    
+    copySheet.Range("A2:w2").Copy
+    pasteSheet.Cells(Rows.Count, 1).End(xlUp).Offset(1, 0).PasteSpecial xlPasteValues
+    Application.CutCopyMode = False
+    Application.ScreenUpdating = True
+End Sub
+
+Sub Replace0withBlank()
+' Replace 0 cell values with Blank
+    Sheets("List").Select
+    Columns("M:V").Select
+    Selection.Replace What:="0", Replacement:="", LookAt:=xlWhole, _
+        SearchOrder:=xlByRows, MatchCase:=False, SearchFormat:=False, _
+        ReplaceFormat:=False
+End Sub
+
+Sub SavePDF()
+    Sheets("Form").Select
+Dim Path As String
+Dim filename As String
+Path = "Z:\PMO\Stephen Bowie\Projects\Service\BBG Form\"
+filename = Range("C5")
+    Range("B1:C25").Select
+    ActiveSheet.ExportAsFixedFormat Type:=xlTypePDF, filename:=Path & filename & ".pdf"
+End Sub
+
+Sub Clear_Form()
+' Clear_Form Macro
+    Range("C3:C25").Select
+    Selection.ClearContents
+End Sub

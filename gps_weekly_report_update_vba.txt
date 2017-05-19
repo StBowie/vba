@@ -1,0 +1,113 @@
+Sub A_ClearDataAll()
+    Call ClearDataInv
+    Call ClearDataSold
+    Call ClearDataStatus
+    Call ClearDataCalAmp
+    Call ClearDataRO
+End Sub
+
+Sub ClearDataInv()
+' ClearDataInv Macro
+    Sheets("Inventory").Select
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    Range("Table3[[Stock .]:[Total Cost]]").Select
+    Selection.ClearContents
+End Sub
+
+Sub ClearDataSold()
+' ClearDataSold Macro
+    Sheets("Sold").Select
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    Range("Table4[[Stock .]:[Total Cost]]").Select
+    Selection.ClearContents
+End Sub
+
+Sub ClearDataStatus()
+' ClearDataStatus Macro
+    Sheets("Status").Select
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    Range("Table2[[StockNum]:[recOrder]]").Select
+    Selection.ClearContents
+End Sub
+
+Sub ClearDataCalAmp()
+' ClearDataCalAmp Macro
+    Sheets("CalAmp").Select
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    Range("Table5[[Account_Name]:[Model]]").Select
+    Selection.ClearContents
+End Sub
+
+Sub ClearDataRO()
+' ClearDataRO Macro
+    Sheets("RO").Select
+    Rows("3:3").Select
+    Range(Selection, Selection.End(xlDown)).Select
+    Selection.Delete Shift:=xlUp
+    Range("Table1[[ServiceType]:[EnvFee]]").Select
+    Selection.ClearContents
+End Sub
+
+Sub A_RunReportUpdate()
+    Call PrepGPSReport
+    Call UpdateGPSReport
+    Call RefreshPivots
+    Call SaveAll
+End Sub
+
+Sub PrepGPSReport()
+'Prep GPS Report Macro
+    Workbooks.Open Filename:="Z:\PMO\Stephen Bowie\Projects\Service\GPS\GPS Management Report.xlsx"
+    Windows("GPS Management Report Calculation.xlsm").Activate
+    Sheets("Report").Select
+    Cells.Select
+    Selection.Copy
+    Windows("GPS Management Report.xlsx").Activate
+    Sheets("CurrentWeek").Select
+    Cells.Select
+    Range("A1").Activate
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+End Sub
+
+Sub UpdateGPSReport()
+' Copies new data into report
+
+    Application.ScreenUpdating = False
+    Dim copySheet As Worksheet
+    Dim pasteSheet As Worksheet
+    
+    Set copySheet = Worksheets("CurrentWeek")
+    Set pasteSheet = Worksheets("Summary")
+    
+    copySheet.Range("A5:bf5").Copy
+    pasteSheet.Cells(Rows.Count, 1).End(xlUp).Offset(1, 0).PasteSpecial xlPasteValues
+    Application.CutCopyMode = False
+    Application.ScreenUpdating = True
+
+End Sub
+
+Sub RefreshPivots()
+' RefreshPivots Macro
+    Windows("GPS Management Report.xlsx").Activate
+    ActiveWorkbook.RefreshAll
+    Windows("GPS Management Report Calculation.xlsm").Activate
+End Sub
+
+Sub SaveAll()
+' SaveAll Macro
+    ActiveWorkbook.Save
+    Windows("GPS Management Report.xlsx").Activate
+    ActiveWorkbook.Save
+    Windows("GPS Management Report Calculation.xlsm").Activate
+End Sub
+
+

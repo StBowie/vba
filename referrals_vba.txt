@@ -1,0 +1,229 @@
+Sub RunAll()
+    Call RefreshAll
+    Call CopyData
+    Call FillBlanks
+    Call RemoveDuplicates
+    Call SixtyDayFile
+    Call ThirtyDayFile
+End Sub
+
+Sub RefreshAll()
+' RefreshAll Macro
+    ActiveWorkbook.RefreshAll
+End Sub
+
+Sub CopyData()
+' CopyData Macro
+' UP60
+    Sheets("Pivots").Select
+    Range("A7:G500").Select
+    Selection.Copy
+    Sheets("UP60").Select
+    Range("A2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Sheets("Pivots").Select
+    Range("I7:O500").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("UP60").Select
+    Range("A500").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("A:A").Select
+    Selection.NumberFormat = "m/d/yyyy"
+' CO60
+    Sheets("Pivots").Select
+    Range("Q7:W500").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("CO60").Select
+    Range("A2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Range("A500").Select
+    Sheets("Pivots").Select
+    Range("Y7:AE500").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("CO60").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("A:A").Select
+    Selection.NumberFormat = "m/d/yyyy"
+' UP30
+	Sheets("Pivots").Select
+    Range("AG7:AM500").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("UP30").Select
+    Range("A2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Sheets("Pivots").Select
+    Range("AO7:AU500").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("UP30").Select
+    Range("A500").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("A:A").Select
+    Selection.NumberFormat = "m/d/yyyy"
+	' CO30
+    Sheets("Pivots").Select
+    Range("AW7:BC500").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("CO30").Select
+    Range("A2").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Sheets("Pivots").Select
+    Range("BE7:BK500").Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Sheets("CO30").Select
+    Range("A500").Select
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Columns("A:A").Select
+    Selection.NumberFormat = "m/d/yyyy"
+    Sheets("Pivots").Select
+End Sub
+
+Sub FillBlanks()
+' FillBlanks Macro
+    Sheets("UP60").Select
+    Columns("A:G").Select
+    Selection.SpecialCells(xlCellTypeBlanks).Select
+    Selection.FormulaR1C1 = "=R[-1]C"
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    
+    Sheets("CO60").Select
+    Columns("A:G").Select
+    Selection.SpecialCells(xlCellTypeBlanks).Select
+    Selection.FormulaR1C1 = "=R[-1]C"
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    Sheets("UP30").Select
+    Columns("A:G").Select
+    Selection.SpecialCells(xlCellTypeBlanks).Select
+    Selection.FormulaR1C1 = "=R[-1]C"
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+        
+    Sheets("CO30").Select
+    Columns("A:G").Select
+    Selection.SpecialCells(xlCellTypeBlanks).Select
+    Selection.FormulaR1C1 = "=R[-1]C"
+    Cells.Select
+    Selection.Copy
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+End Sub
+
+Sub RemoveDuplicates()
+' RemoveDuplicates Macro
+    Sheets("UP60").Select
+    ActiveSheet.Range("$A$1:$G$1000").RemoveDuplicates Columns:=Array(1, 2, 3, 4, 5, 6, _
+        7), Header:=xlYes
+        
+    Sheets("CO60").Select
+    ActiveSheet.Range("$A$1:$G$1000").RemoveDuplicates Columns:=Array(1, 2, 3, 4, 5, 6, _
+        7), Header:=xlYes
+        
+    Sheets("UP30").Select
+    ActiveSheet.Range("$A$1:$G$1000").RemoveDuplicates Columns:=Array(1, 2, 3, 4, 5, 6, _
+        7), Header:=xlYes
+        
+    Sheets("CO30").Select
+    ActiveSheet.Range("$A$1:$G$1000").RemoveDuplicates Columns:=Array(1, 2, 3, 4, 5, 6, _
+        7), Header:=xlYes
+End Sub
+
+Sub SixtyDayFile()
+' Creates a new file of referral contacts with 60 days remaining to redeem their referral bonus
+    Sheets("Lookup").Select
+    Dim Path As String
+    Dim filename As String
+    Path = "Z:\Marketing\Referrals\Files\"
+    filename = Range("A3")
+    Workbooks.Add
+    Sheets("Sheet1").Name = "UP"
+    Sheets.Add After:=ActiveSheet
+    Sheets("Sheet2").Name = "CO"
+    Sheets("UP").Select
+    Windows("Referrals Report Automation.xlsm").Activate
+    Sheets("UP60").Select
+    Cells.Select
+    Selection.Copy
+    Windows("Book1").Activate
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+    Sheets("CO").Select
+    Windows("Referrals Report Automation.xlsm").Activate
+    Sheets("CO60").Select
+    Cells.Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Windows("Book1").Activate
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+    Application.CutCopyMode = False
+    ChDir "Z:\Marketing\Referrals"
+    ActiveWorkbook.SaveAs filename:=Path & filename & ".xlsx", _
+        FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
+    ActiveWindow.Close
+End Sub
+
+Sub ThirtyDayFile()
+' Creates a new file of referral contacts with 30 days remaining to redeem their referral bonus
+    Sheets("Lookup").Select
+    Dim Path As String
+    Dim filename As String
+    Path = "Z:\Marketing\Referrals\Files\"
+    filename = Range("A2")
+    Workbooks.Add
+    Sheets("Sheet1").Name = "UP"
+    Sheets.Add After:=ActiveSheet
+    Sheets("Sheet2").Name = "CO"
+    Sheets("UP").Select
+    Windows("Referrals Report Automation.xlsm").Activate
+    Sheets("UP30").Select
+    Cells.Select
+    Selection.Copy
+    Windows("Book2").Activate
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+    Sheets("CO").Select
+    Windows("Referrals Report Automation.xlsm").Activate
+    Sheets("CO30").Select
+    Cells.Select
+    Application.CutCopyMode = False
+    Selection.Copy
+    Windows("Book2").Activate
+    Selection.PasteSpecial Paste:=xlPasteValues, Operation:=xlNone, SkipBlanks _
+        :=False, Transpose:=False
+    Selection.PasteSpecial Paste:=xlPasteFormats, Operation:=xlNone, _
+        SkipBlanks:=False, Transpose:=False
+    Application.CutCopyMode = False
+    ChDir "Z:\Marketing\Referrals"
+    ActiveWorkbook.SaveAs filename:=Path & filename & ".xlsx", _
+        FileFormat:=xlOpenXMLWorkbook, CreateBackup:=False
+    ActiveWindow.Close
+End Sub
